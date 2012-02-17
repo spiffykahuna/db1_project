@@ -1,0 +1,7 @@
+drop table trade;
+drop table product;
+drop table photospot;
+drop table person ;
+drop table address;
+drop table databasechangeloglock;
+drop table  databasechangelog;

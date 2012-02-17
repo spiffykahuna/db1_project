@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Minu kaup</title>
+        <style type="text/css">@import url(map.css);</style>
+
+        <style>
+            html, body {
+                margin: 0;
+                padding: 0;
+                font-size: 75%;
+            }
+        </style>
+
+        <link rel="stylesheet" type="text/css" media="screen" href="css/ui-lightness/jquery-ui-1.7.1.custom.css" />
+        <link rel="stylesheet" type="text/css" media="screen" href="css/ui.jqgrid.css" />
+        <link rel="stylesheet" type="text/css" media="screen" href="css/ui-lightness/jquery-ui-1.7.1.custom.css" />
+        <link rel="stylesheet" type="text/css" media="screen" href="js/src/css/ui.jqgrid.css" />
+
+        <link rel="stylesheet" href="themes/flick/jquery.ui.all.css">
+
+
+
+
+        <script type="text/javascript" src="http://code.jquery.com/jquery-1.6.1.min.js"></script>
+        <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js"></script>
+        <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+
+        <script src="js/i18n/grid.locale-en.js" type="text/javascript"></script>
+        <script src="js/jquery.jqGrid.min.js" type="text/javascript"></script>
+
+        <script src="js/jquery.json-2.3.js" type="text/javascript"></script>
+
+
+        <script type="text/javascript" src="common.js"></script>
+        <script type="text/javascript">
+            var infoWindow = new google.maps.InfoWindow();
+            var geocoder = new google.maps.Geocoder();
+            google.maps.event.addListener(infoWindow, 'closeclick', removeStaleMarker);
+            var lastMarker;
+
+            $(function() {
+                $('#content').height($(document).height() - $('#header').outerHeight());
+            });
+
+            function locationCallback(location) {
+                var latLng = new google.maps.LatLng(location.coords.latitude, location.coords.longitude);
+                map = new google.maps.Map(document.getElementById('map'), {
+                    mapTypeId: google.maps.MapTypeId.ROADMAP,
+                    center: latLng,
+                    zoom: 10
+                });
+
+                $.get('/rest/photo-spots', function(spots) {
+                    for (var i in spots) {
+                        addMarker(spots[i]);
+                    }
+                });
+
+                google.maps.event.addListener(map, 'click', function(event) {
+                    showNewSpotForm(event.latLng);
+                });
+            }
+
+            function addMarker(spot) {
+                return spot.marker = new google.maps.Marker({position: toLatLng(spot), map: map, title: spot.name});
+            }
+
+            function editSpot(spot) {
+                function option(value, name) { return {value: value, name: name} }
+                var form = $('#editTemplate').tmpl(spot);
+                infoWindow.content = form.html();
+                infoWindow.open(map, spot.marker);
+            }
+
+            function showNewSpotForm(latLng) {
+                var location = {latitude: latLng.lat(), longitude: latLng.lng()};
+                var spot = {name:'', location:location};
+                removeStaleMarker();
+                lastMarker = addMarker(spot);
+                editSpot(spot);
+
+                geocoder.geocode({latLng: latLng}, function(results, status) {
+                    if (status == google.maps.GeocoderStatus.OK) {
+                        var address = results[0].formatted_address;
+                        address = address.substring(0, address.indexOf(','));
+                        $('#editForm input[name=name]').val(address);
+                    }
+                });
+            }
+
+            function saveSpot(form) {
+                $.post(form.action, $(form).serializeArray(), function(spot) {
+                    removeStaleMarker();
+                    addMarker(spot);
+                    infoWindow.close();
+                });
+                location.reload();
+            }
+
+            function removeStaleMarker() {
+                if (lastMarker) lastMarker.setMap(null);
+            }
+
+            function toLatLng(hub) {
+                return new google.maps.LatLng(hub.location.latitude, hub.location.longitude);
+            }
+
+
+
+        </script>
+    </head>
+
+    <body>
+        <div id="container">
+            <div id="header">
+                <h1>Ladu</h1>
+                <div id="navigation" >
+                    <table>
+                        <tr>
+                            <td><input type="button" onclick="loadProductTable(); return false;" value="Kaup"></td>
+                            <td><input type="button" onclick="loadTradeTable()" value="Tehingud"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="editTemplate" style="display:none">
+            <div>
+                <form id="editForm" action="/rest/goods" method="POST">
+                    <h3>New product:</h3>
+                    <table>
+                        <tr>
+                            <td>Name:</td>
+                            <td>
+                                <input type="text" name="name" >
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Code: </td>
+                            <td>
+                                <input type="text" name="code" >
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Price: </td>
+                            <td>
+                                <input type="text" name="price" >
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td class="buttons">
+                                <input type="button" onclick="saveSpot(this.form); return false;" value="Save">
+                            </td>
+                        </tr>
+                    </table>
+
+                </form>
+            </div>
+        </div>
+        <div id="myTableView" align="center" >
+            <!---->
+            <!--<table id='myTable' rules="all">-->
+
+            <!--</table>-->
+
+            <table id="list2"></table>
+            <div id="pager2" ></div>
+
+            <table id="list3"></table>
+            <div id="pager3" ></div>
+            <!--<input type="BUTTON" id="ed1" value="Edit row 1" />-->
+            <!--<input type="BUTTON" id="sved1" disabled='true' value="Save row 1" />-->
+            <!--<input type="BUTTON" id="cned1" disabled='true' value="Cancel Save" />-->
+        </div>
+
+    </body>
+</html>

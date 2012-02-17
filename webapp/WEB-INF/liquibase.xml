@@ -1,0 +1,218 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+    <changeSet id="20110823" author="Codeborne">
+        <createTable tableName="PhotoSpot">
+            <column name="id" type="integer" autoIncrement="true"><constraints primaryKey="true"/></column>
+            <column name="name" type="char(200)"/>
+            <column name="description" type="text"/>
+            <column name="lat" type="float"/>
+            <column name="lon" type="float"/>
+            <column name="createdAt" type="timestamp" defaultValueComputed="now()"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20110823-1" author="Codeborne">
+        <renameColumn tableName="PhotoSpot" oldColumnName="lat" newColumnName="latitude"/>
+        <renameColumn tableName="PhotoSpot" oldColumnName="lon" newColumnName="longitude"/>
+    </changeSet>
+
+    <changeSet id="20110823-2" author="Codeborne">
+        <insert tableName="PhotoSpot">
+            <column name="name" value="Kohtuotsa vaateplatvorm"/>
+            <column name="latitude" value="59.437755"/>
+            <column name="longitude" value="24.74209"/>
+        </insert>
+    </changeSet>
+
+
+
+    <changeSet id="20111029-1" author="deko">
+        <createTable tableName="Trade">
+            <column name="id" type="integer" autoIncrement="true"><constraints primaryKey="true"/></column>
+            <!--<column name="product_id" type="integer"/>-->
+            <column name="quantity" type="integer"/>
+            <column name="total_price" type="float"/>
+            <column name="product_id" type="integer"/>
+            <column name="createdAt" type="timestamp" defaultValueComputed="now()"/>
+        </createTable>
+
+        <!--<addForeignKeyConstraint constraintName="fk_trade_product"-->
+            <!--baseTableName="Trade" baseColumnNames="product_id"-->
+            <!--referencedTableName="Product" referencedColumnNames="id"-->
+        <!--/>-->
+
+        <!-- Some prepaired products-->
+        <insert tableName="Trade">
+            <column name="quantity" value="10" />
+            <column name="total_price" value="33.32" />
+            <column name="product_id" value="1" />
+        </insert>
+
+        <insert tableName="Trade">
+            <column name="quantity" value="20" />
+            <column name="total_price" value="6666.42" />
+            <column name="product_id" value="5" />
+        </insert>
+
+
+    </changeSet>
+
+
+    <changeSet id="20111029" author="deko">
+        <createTable tableName="Product">
+            <column name="id" type="integer" autoIncrement="true"><constraints primaryKey="true"/></column>
+            <!--<column name="trade_id" type="integer"/>-->
+            <column name="code" type="text"/>
+            <column name="name" type="char(200)"/>
+            <column name="unitPrice" type="float"/>
+            <column name="createdAt" type="timestamp" defaultValueComputed="now()"/>
+        </createTable>
+
+        <!--<addForeignKeyConstraint constraintName="fk_product_trade"-->
+            <!--baseTableName="Trade" baseColumnNames="id"-->
+            <!--referencedTableName="Product" referencedColumnNames="trade_id"-->
+        <!--/>-->
+
+        <!-- Some prepaired products-->
+        <insert tableName="Product">
+            <column name="code" value="itemX00" />
+            <column name="name" value="juust" />
+            <column name="unitPrice" value="0.11" />
+        </insert>
+
+        <insert tableName="Product">
+            <column name="code" value="itemX10" />
+            <column name="name" value="kefir" />
+            <column name="unitPrice" value="111.11" />
+        </insert>
+
+        <insert tableName="Product">
+            <column name="code" value="itemX20" />
+            <column name="name" value="hapukoor" />
+            <column name="unitPrice" value="222.22" />
+        </insert>
+
+        <insert tableName="Product">
+            <column name="code" value="itemX30" />
+            <column name="name" value="piim" />
+            <column name="unitPrice" value="333.33" />
+        </insert>
+
+        <insert tableName="Product">
+            <column name="code" value="itemX40" />
+            <column name="name" value="kohuke" />
+            <column name="unitPrice" value="444.44" />
+        </insert>
+
+        <insert tableName="Product">
+            <column name="code" value="itemX50" />
+            <column name="name" value="jogurt" />
+            <column name="unitPrice" value="444.44" />
+        </insert>
+
+        <insert tableName="Product">
+            <column name="code" value="itemX60" />
+            <column name="name" value="pett" />
+            <column name="unitPrice" value="555.55" />
+        </insert>
+
+        <insert tableName="Product">
+            <column name="code" value="itemX70" />
+            <column name="name" value="sai" />
+            <column name="unitPrice" value="66.66" />
+        </insert>
+
+        <insert tableName="Product">
+            <column name="code" value="itemX80" />
+            <column name="name" value="leib" />
+            <column name="unitPrice" value="888" />
+        </insert>
+
+        <insert tableName="Product">
+            <column name="code" value="itemX90" />
+            <column name="name" value="kali" />
+            <column name="unitPrice" value="5" />
+        </insert>
+
+        <insert tableName="Product">
+            <column name="code" value="itemX100" />
+            <column name="name" value="küpsis" />
+            <column name="unitPrice" value="10.4" />
+        </insert>
+
+        <insert tableName="Product">
+            <column name="code" value="itemX101" />
+            <column name="name" value="sokolaad" />
+            <column name="unitPrice" value="11.5" />
+        </insert>
+
+        <insert tableName="Product">
+            <column name="code" value="itemX102" />
+            <column name="name" value="kommid" />
+            <column name="unitPrice" value="12.4444" />
+        </insert>
+
+        <insert tableName="Product">
+            <column name="code" value="itemX103" />
+            <column name="name" value="suhkur" />
+            <column name="unitPrice" value="1333" />
+        </insert>
+
+
+        <insert tableName="Product">
+            <column name="code" value="itemX104" />
+            <column name="name" value="sool" />
+            <column name="unitPrice" value="14.42" />
+        </insert>
+
+    </changeSet>
+
+
+    <changeSet id="20111030" author="deko">
+        <createTable tableName="Person">
+            <column name="id" type="integer" autoIncrement="true"><constraints primaryKey="true"/></column>
+            <column name="first_name" type="char(200)"/>
+            <column name="last_name" type="char(200)"/>
+            <column name="address_id" type="integer"/>
+            <column name="createdAt" type="timestamp" defaultValueComputed="now()"/>
+        </createTable>
+
+        <!-- Some prepaired products-->
+        <insert tableName="Person">
+            <column name="first_name" value="Denis" />
+            <column name="last_name" value="Konstantinov" />
+        </insert>
+
+        <insert tableName="Person">
+            <column name="first_name" value="Polina" />
+            <column name="last_name" value="Anisimova" />
+        </insert>
+    </changeSet>
+
+    <changeSet id="20111031" author="deko">
+        <createTable tableName="Address">
+            <column name="id" type="integer" autoIncrement="true"><constraints primaryKey="true"/></column>
+            <column name="person_id" type="integer"/>
+            <column name="address" type="char(200) "/>
+            <column name="city" type="char(200)"/>
+            <column name="state" type="char(200)"/>
+            <column name="zip_postal" type="char(200)"/>
+            <column name="createdAt" type="timestamp" defaultValueComputed="now()"/>
+        </createTable>
+
+         <addForeignKeyConstraint constraintName="fk_address_person_id"
+            baseTableName="Address" baseColumnNames="person_id"
+            referencedTableName="Person" referencedColumnNames="id"
+        />
+
+         <!--<insert tableName="Address">-->
+            <!--<column name="address" value="bum" />-->
+            <!--<column name="city" value="bum" />-->
+            <!--<column name="state" value="bum" />-->
+            <!--<column name="zip_postal" value="bum"/>-->
+            <!--<column name="person_id" value="1" />-->
+         <!--</insert>-->
+    </changeSet>
+
+</databaseChangeLog>
